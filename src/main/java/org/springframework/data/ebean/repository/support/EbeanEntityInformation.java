@@ -1,6 +1,6 @@
 package org.springframework.data.ebean.repository.support;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import lombok.NonNull;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.repository.core.EntityInformation;
@@ -11,14 +11,14 @@ import org.springframework.data.repository.core.EntityInformation;
  */
 public class EbeanEntityInformation<T, ID> implements EntityInformation<T, ID> {
 
-    private final EbeanServer ebeanServer;
+    private final Database ebeanServer;
 
     private final @NonNull
     Class<T> domainClass;
 
     private Class<ID> idClass;
 
-    public EbeanEntityInformation(EbeanServer ebeanServer, Class<T> domainClass) {
+    public EbeanEntityInformation(Database ebeanServer, Class<T> domainClass) {
         this.ebeanServer = ebeanServer;
         this.domainClass = domainClass;
 
@@ -33,12 +33,12 @@ public class EbeanEntityInformation<T, ID> implements EntityInformation<T, ID> {
 
     @Override
     public boolean isNew(T entity) {
-        return ebeanServer.getBeanState(entity).isNew();
+        return ebeanServer.beanState(entity).isNew();
     }
 
     @Override
     public ID getId(T entity) {
-        return (ID) ebeanServer.getBeanId(entity);
+        return (ID) ebeanServer.beanId(entity);
     }
 
     @Override

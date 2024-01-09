@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.repository.query.DefaultParameters;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.util.Assert;
@@ -31,7 +31,7 @@ import static org.springframework.data.ebean.repository.query.AbstractEbeanQuery
 public abstract class AbstractEbeanQuery implements RepositoryQuery {
 
     private final EbeanQueryMethod method;
-    private final EbeanServer ebeanServer;
+    private final Database ebeanServer;
 
     /**
      * Creates a new {@link AbstractEbeanQuery} from the given {@link EbeanQueryMethod}.
@@ -39,7 +39,7 @@ public abstract class AbstractEbeanQuery implements RepositoryQuery {
      * @param method
      * @param ebeanServer
      */
-    public AbstractEbeanQuery(EbeanQueryMethod method, EbeanServer ebeanServer) {
+    public AbstractEbeanQuery(EbeanQueryMethod method, Database ebeanServer) {
 
         Assert.notNull(method, "EbeanQueryMethod must not be null!");
         Assert.notNull(ebeanServer, "EbeanServer must not be null!");
@@ -49,11 +49,11 @@ public abstract class AbstractEbeanQuery implements RepositoryQuery {
     }
 
     /**
-     * Returns the {@link EbeanServer}.
+     * Returns the {@link Database}.
      *
      * @return will never be {@literal null}.
      */
-    protected EbeanServer getEbeanServer() {
+    protected Database getEbeanServer() {
         return ebeanServer;
     }
 

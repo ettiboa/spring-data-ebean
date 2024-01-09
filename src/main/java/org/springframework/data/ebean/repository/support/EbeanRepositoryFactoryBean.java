@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.support;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.Repository;
@@ -36,7 +36,7 @@ public class EbeanRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> {
 
     @Autowired
-    private EbeanServer ebeanServer;
+    private Database ebeanServer;
 
     /**
      * Creates a new {@link EbeanRepositoryFactoryBean} for the given repository interface.
@@ -85,7 +85,7 @@ public class EbeanRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
      * @param ebeanServer
      * @return
      */
-    protected RepositoryFactorySupport createRepositoryFactory(EbeanServer ebeanServer) {
+    protected RepositoryFactorySupport createRepositoryFactory(Database ebeanServer) {
         return new EbeanRepositoryFactory(ebeanServer);
     }
 }

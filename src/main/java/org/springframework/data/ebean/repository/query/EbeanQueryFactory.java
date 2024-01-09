@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ enum EbeanQueryFactory {
      * @param evaluationContextProvider
      * @return the {@link RepositoryQuery} derived from the annotation or {@code null} if no annotation found.
      */
-    AbstractEbeanQuery fromQueryAnnotation(EbeanQueryMethod method, EbeanServer ebeanServer,
+    AbstractEbeanQuery fromQueryAnnotation(EbeanQueryMethod method, Database ebeanServer,
                                            QueryMethodEvaluationContextProvider evaluationContextProvider) {
 
         LOG.debug("Looking up query for method {}", method.getName());
@@ -66,7 +66,7 @@ enum EbeanQueryFactory {
      * @param evaluationContextProvider
      * @return
      */
-    AbstractEbeanQuery fromMethodWithQueryString(EbeanQueryMethod method, EbeanServer ebeanServer, String queryString,
+    AbstractEbeanQuery fromMethodWithQueryString(EbeanQueryMethod method, Database ebeanServer, String queryString,
                                                  QueryMethodEvaluationContextProvider evaluationContextProvider) {
 
         if (queryString == null) {

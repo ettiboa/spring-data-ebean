@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor;
@@ -140,15 +140,15 @@ public abstract class AbstractEbeanQueryExecution {
      */
     static class UpdateExecution extends AbstractEbeanQueryExecution {
 
-        private final EbeanServer ebeanServer;
+        private final Database ebeanServer;
 
         /**
-         * Creates an execution that automatically clears the given {@link EbeanServer} after execution if the given
-         * {@link EbeanServer} is not {@literal null}.
+         * Creates an execution that automatically clears the given {@link Database} after execution if the given
+         * {@link Database} is not {@literal null}.
          *
          * @param ebeanServer
          */
-        public UpdateExecution(EbeanQueryMethod method, EbeanServer ebeanServer) {
+        public UpdateExecution(EbeanQueryMethod method, Database ebeanServer) {
 
             Class<?> returnType = method.getReturnType();
 
@@ -174,9 +174,9 @@ public abstract class AbstractEbeanQueryExecution {
      */
     static class DeleteExecution extends AbstractEbeanQueryExecution {
 
-        private final EbeanServer ebeanServer;
+        private final Database ebeanServer;
 
-        public DeleteExecution(EbeanServer ebeanServer) {
+        public DeleteExecution(Database ebeanServer) {
             this.ebeanServer = ebeanServer;
         }
 

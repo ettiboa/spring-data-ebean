@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.data.ebean.domain;
+package org.springframework.data.ebean.sample.domain;
 
 import org.springframework.data.domain.AfterDomainEventPublication;
 import org.springframework.data.domain.DomainEvents;

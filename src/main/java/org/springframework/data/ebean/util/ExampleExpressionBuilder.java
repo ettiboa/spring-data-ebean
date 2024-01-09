@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.util;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.ExampleExpression;
 import io.ebean.LikeType;
 import org.springframework.data.domain.Example;
@@ -36,7 +36,7 @@ public class ExampleExpressionBuilder {
      * @param <T>
      * @return
      */
-    public static <T> ExampleExpression exampleExpression(EbeanServer ebeanServer, Example<T> example) {
+    public static <T> ExampleExpression exampleExpression(Database ebeanServer, Example<T> example) {
         LikeType likeType;
         switch (example.getMatcher().getDefaultStringMatcher()) {
             case EXACT:
@@ -55,7 +55,7 @@ public class ExampleExpressionBuilder {
                 likeType = LikeType.RAW;
                 break;
         }
-        return ebeanServer.getExpressionFactory().exampleLike(example.getProbe(),
+        return ebeanServer.expressionFactory().exampleLike(example.getProbe(),
                 example.getMatcher().isIgnoreCaseEnabled(),
                 likeType);
     }

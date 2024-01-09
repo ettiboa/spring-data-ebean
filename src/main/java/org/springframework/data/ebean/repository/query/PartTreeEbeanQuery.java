@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.ExpressionList;
 import io.ebean.Query;
 import org.springframework.data.domain.Sort;
@@ -44,7 +44,7 @@ public class PartTreeEbeanQuery extends AbstractEbeanQuery {
      * @param method      must not be {@literal null}.
      * @param ebeanServer must not be {@literal null}.
      */
-    public PartTreeEbeanQuery(EbeanQueryMethod method, EbeanServer ebeanServer) {
+    public PartTreeEbeanQuery(EbeanQueryMethod method, Database ebeanServer) {
         super(method, ebeanServer);
 
         this.domainClass = method.getEntityInformation().getJavaType();
@@ -80,9 +80,9 @@ public class PartTreeEbeanQuery extends AbstractEbeanQuery {
      */
     private class QueryPreparer {
 
-        private final EbeanServer ebeanServer;
+        private final Database ebeanServer;
 
-        public QueryPreparer(EbeanServer ebeanServer) {
+        public QueryPreparer(Database ebeanServer) {
             this.ebeanServer = ebeanServer;
         }
 
@@ -102,7 +102,7 @@ public class PartTreeEbeanQuery extends AbstractEbeanQuery {
         }
 
         protected EbeanQueryCreator createCreator(ParametersParameterAccessor accessor) {
-            EbeanServer ebeanServer = getEbeanServer();
+            Database ebeanServer = getEbeanServer();
             Query ebeanQuery = ebeanServer.createQuery(domainClass);
             ExpressionList expressionList = ebeanQuery.where();
 

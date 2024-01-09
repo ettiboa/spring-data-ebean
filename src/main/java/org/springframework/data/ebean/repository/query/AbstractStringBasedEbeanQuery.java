@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.repository.query.*;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.Assert;
@@ -34,7 +34,7 @@ abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
     private final SpelExpressionParser parser;
 
     /**
-     * Creates a new {@link AbstractStringBasedEbeanQuery} from the given {@link EbeanQueryMethod}, {@link io.ebean.EbeanServer} and
+     * Creates a new {@link AbstractStringBasedEbeanQuery} from the given {@link EbeanQueryMethod}, {@link io.ebean.Database} and
      * query {@link String}.
      *
      * @param method                    must not be {@literal null}.
@@ -43,7 +43,7 @@ abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
      * @param evaluationContextProvider must not be {@literal null}.
      * @param parser                    must not be {@literal null}.
      */
-    public AbstractStringBasedEbeanQuery(EbeanQueryMethod method, EbeanServer ebeanServer, String queryString,
+    public AbstractStringBasedEbeanQuery(EbeanQueryMethod method, Database ebeanServer, String queryString,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
 
         super(method, ebeanServer);
@@ -88,14 +88,14 @@ abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
     }
 
     /**
-     * Creates an appropriate Ebean query from an {@link EbeanServer} according to the current {@link AbstractEbeanQuery}
+     * Creates an appropriate Ebean query from an {@link Database} according to the current {@link AbstractEbeanQuery}
      * type.
      *
      * @param queryString
      * @return
      */
     protected EbeanQueryWrapper createEbeanQuery(String queryString) {
-        EbeanServer ebeanServer = getEbeanServer();
+        Database ebeanServer = getEbeanServer();
 
         ResultProcessor resultFactory = getQueryMethod().getResultProcessor();
         ReturnedType returnedType = resultFactory.getReturnedType();

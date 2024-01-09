@@ -18,10 +18,12 @@ package org.springframework.data.ebean.querychannel;
 
 import io.ebean.*;
 import io.ebean.text.PathProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.ebean.annotation.ExprParam;
 import org.springframework.data.ebean.annotation.IncludeFields;
 import org.springframework.data.ebean.util.Converters;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -34,19 +36,21 @@ import java.util.Map;
  *
  * @author Xuegui Yuan
  */
+@Service
 public class EbeanQueryChannelService implements QueryChannelService {
 
-    private EbeanServer ebeanServer;
+    public static final String ENTITY_TYPE_MUST_NOT_NULL = "entityType must not null";
+    private final Database ebeanServer;
 
     public EbeanQueryChannelService() {
-        this.ebeanServer = Ebean.getDefaultServer();
+        this.ebeanServer = DB.getDefault();
     }
 
     public EbeanQueryChannelService(String serverName) {
-        this.ebeanServer = Ebean.getServer(serverName);
+        this.ebeanServer = DB.byName(serverName);
     }
 
-    public EbeanQueryChannelService(EbeanServer ebeanServer) {
+    public EbeanQueryChannelService(Database ebeanServer) {
         this.ebeanServer = ebeanServer;
     }
 
@@ -55,8 +59,8 @@ public class EbeanQueryChannelService implements QueryChannelService {
      *
      * @return the current EbeanServer
      */
-    public static EbeanServer db() {
-        return Ebean.getDefaultServer();
+    public static Database db() {
+        return DB.getDefault();
     }
 
     /**
@@ -64,8 +68,8 @@ public class EbeanQueryChannelService implements QueryChannelService {
      *
      * @return the named EbeanServer
      */
-    public static EbeanServer db(String name) {
-        return Ebean.getServer(name);
+    public static Database db(String name) {
+        return DB.byName(name);
     }
 
     /**
@@ -74,8 +78,8 @@ public class EbeanQueryChannelService implements QueryChannelService {
      * @return the Query.
      */
     public static <T> Query<T> query(Class<T> entityType) {
-        Assert.notNull(entityType, "entityType must not null");
-        return Ebean.find(entityType);
+        Assert.notNull(entityType, ENTITY_TYPE_MUST_NOT_NULL);
+        return DB.find(entityType);
     }
 
     /**
@@ -347,13 +351,14 @@ public class EbeanQueryChannelService implements QueryChannelService {
         Assert.notNull(pageable, "pageable must not null");
         return expressionList.setMaxRows(pageable.getPageSize())
                 .setFirstRow((int) pageable.getOffset())
-                .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()));
+                .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat())
+                .query();
     }
 
-    private static <T> Query<T> query(EbeanServer ebeanServer, Class<T> entityType,
+    private static <T> Query<T> query(Database ebeanServer, Class<T> entityType,
                                       String fetchPath, Object queryObject, Pageable pageable) {
         Assert.notNull(ebeanServer, "ebeanServer must not null");
-        Assert.notNull(entityType, "entityType must not null");
+        Assert.notNull(entityType, ENTITY_TYPE_MUST_NOT_NULL);
         Query<T> query = ebeanServer.find(entityType);
         if (StringUtils.hasText(fetchPath)) {
             query.apply(PathProperties.parse(fetchPath));
@@ -375,7 +380,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
         if (pageable != null) {
             expressionList.setMaxRows(pageable.getPageSize())
                     .setFirstRow((int) pageable.getOffset())
-                    .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()));
+                    .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat());
         }
         return expressionList.query();
     }
@@ -437,7 +442,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
     @Override
     public SqlQuery createSqlQuery(String sql) {
         Assert.hasText(sql, "sql must has text");
-        return ebeanServer.createSqlQuery(sql);
+        return ebeanServer.sqlQuery(sql);
     }
 
     /**
@@ -538,7 +543,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
      */
     @Override
     public ExampleExpression exampleOf(Object example) {
-        return ebeanServer.getExpressionFactory().exampleLike(example);
+        return ebeanServer.expressionFactory().exampleLike(example);
     }
 
     /**
@@ -550,6 +555,6 @@ public class EbeanQueryChannelService implements QueryChannelService {
     public ExampleExpression exampleOf(Object example,
                                        boolean caseInsensitive,
                                        LikeType likeType) {
-        return ebeanServer.getExpressionFactory().exampleLike(example, caseInsensitive, likeType);
+        return ebeanServer.expressionFactory().exampleLike(example, caseInsensitive, likeType);
     }
 }

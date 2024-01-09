@@ -114,7 +114,7 @@ public @interface EnableEbeanRepositories {
     // Ebean specific configuration
 
     /**
-     * Configures the name of the {@link io.ebean.EbeanServer} bean definition to be used to create repositories
+     * Configures the name of the {@link io.ebean.Database} bean definition to be used to create repositories
      * discovered through this annotation. Defaults to {@code ebeanServer}.
      *
      * @return

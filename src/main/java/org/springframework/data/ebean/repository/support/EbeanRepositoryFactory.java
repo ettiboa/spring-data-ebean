@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.support;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.ebean.repository.EbeanRepository;
 import org.springframework.data.ebean.repository.query.EbeanQueryLookupStrategy;
@@ -38,14 +38,14 @@ import java.util.Optional;
  */
 public class EbeanRepositoryFactory extends RepositoryFactorySupport {
 
-    private final EbeanServer ebeanServer;
+    private final Database ebeanServer;
 
     /**
      * Creates a new {@link EbeanRepositoryFactory}.
      *
      * @param ebeanServer must not be {@literal null}
      */
-    public EbeanRepositoryFactory(EbeanServer ebeanServer) {
+    public EbeanRepositoryFactory(Database ebeanServer) {
         Assert.notNull(ebeanServer, "EbeanServer must not be null!");
         this.ebeanServer = ebeanServer;
     }
@@ -75,7 +75,7 @@ public class EbeanRepositoryFactory extends RepositoryFactorySupport {
     }
 
     /**
-     * Callback to create a {@link EbeanRepository} instance with the given {@link EbeanServer}
+     * Callback to create a {@link EbeanRepository} instance with the given {@link Database}
      *
      * @param <T>
      * @param <ID>
@@ -83,7 +83,7 @@ public class EbeanRepositoryFactory extends RepositoryFactorySupport {
      * @return
      */
     protected <T extends Persistable, ID extends Serializable> SimpleEbeanRepository<T, ID> getTargetRepository(
-            RepositoryInformation information, EbeanServer ebeanServer) {
+            RepositoryInformation information, Database ebeanServer) {
 
         return getTargetRepositoryViaReflection(information, information.getDomainType(), ebeanServer);
     }

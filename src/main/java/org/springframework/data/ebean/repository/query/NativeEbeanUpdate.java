@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.ebean.annotation.Query;
 import org.springframework.data.repository.query.Parameters;
 import org.springframework.data.repository.query.QueryMethod;
@@ -41,7 +41,7 @@ final class NativeEbeanUpdate extends AbstractStringBasedEbeanQuery {
      * @param queryString               must not be {@literal null} or empty.
      * @param evaluationContextProvider
      */
-    public NativeEbeanUpdate(EbeanQueryMethod method, EbeanServer ebeanServer, String queryString,
+    public NativeEbeanUpdate(EbeanQueryMethod method, Database ebeanServer, String queryString,
                              QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
 
         super(method, ebeanServer, queryString, evaluationContextProvider, parser);
@@ -59,6 +59,6 @@ final class NativeEbeanUpdate extends AbstractStringBasedEbeanQuery {
 
     @Override
     protected EbeanQueryWrapper createEbeanQuery(String queryString) {
-        return EbeanQueryWrapper.ofEbeanQuery(getEbeanServer().createSqlUpdate(queryString));
+        return EbeanQueryWrapper.ofEbeanQuery(getEbeanServer().sqlUpdate(queryString));
     }
 }

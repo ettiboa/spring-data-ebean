@@ -16,13 +16,15 @@
 
 package org.springframework.data.ebean.repository;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.SqlUpdate;
 import io.ebean.UpdateQuery;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
@@ -36,14 +38,14 @@ import java.util.Optional;
  * @author Xuegui Yuan
  */
 @NoRepositoryBean
-public interface EbeanRepository<T, ID> extends PagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T> {
+public interface EbeanRepository<T, ID> extends PagingAndSortingRepository<T, ID>, CrudRepository<T, ID>, QueryByExampleExecutor<T> {
 
     /**
      * Return the current EbeanServer.
      *
      * @return the current EbeanServer
      */
-    EbeanServer db();
+    Database db();
 
     /**
      * Set the current EbeanServer.
@@ -51,7 +53,7 @@ public interface EbeanRepository<T, ID> extends PagingAndSortingRepository<T, ID
      * @param db current EbeanServer
      * @return the current EbeanServer
      */
-    EbeanServer db(EbeanServer db);
+    Database db(Database db);
 
     /**
      * Return an UpdateQuery to perform a bulk update of many rows that match the query.
@@ -178,7 +180,6 @@ public interface EbeanRepository<T, ID> extends PagingAndSortingRepository<T, ID
      * @param ids id list.
      * @return List all entities list.
      */
-    @Override
     List<T> findAllById(Iterable<ID> ids);
 
     /**
@@ -186,7 +187,6 @@ public interface EbeanRepository<T, ID> extends PagingAndSortingRepository<T, ID
      *
      * @return List all entities list.
      */
-    @Override
     List<T> findAll();
 
     /**

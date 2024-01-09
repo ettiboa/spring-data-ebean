@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ final class NamedEbeanQuery extends AbstractEbeanQuery {
     /**
      * Creates a new {@link NamedEbeanQuery}.
      */
-    private NamedEbeanQuery(EbeanQueryMethod method, EbeanServer ebeanServer, Query query) {
+    private NamedEbeanQuery(EbeanQueryMethod method, Database ebeanServer, Query query) {
         super(method, ebeanServer);
 
         this.queryName = method.getNamedQueryName();
@@ -55,7 +55,7 @@ final class NamedEbeanQuery extends AbstractEbeanQuery {
      * @param method
      * @return
      */
-    public static RepositoryQuery lookupFrom(EbeanQueryMethod method, EbeanServer ebeanServer) {
+    public static RepositoryQuery lookupFrom(EbeanQueryMethod method, Database ebeanServer) {
         final String queryName = method.getNamedQueryName();
 
         LOG.debug("Looking up named query {}", queryName);

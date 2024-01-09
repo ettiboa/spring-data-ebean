@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.ebean.annotation.Query;
 import org.springframework.data.repository.query.*;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -38,7 +38,7 @@ final class NativeEbeanQuery extends AbstractStringBasedEbeanQuery {
      * @param queryString               must not be {@literal null} or empty.
      * @param evaluationContextProvider
      */
-    public NativeEbeanQuery(EbeanQueryMethod method, EbeanServer ebeanServer, String queryString,
+    public NativeEbeanQuery(EbeanQueryMethod method, Database ebeanServer, String queryString,
                             QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
 
         super(method, ebeanServer, queryString, evaluationContextProvider, parser);

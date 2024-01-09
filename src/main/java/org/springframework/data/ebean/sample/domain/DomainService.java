@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,19 @@
 
 package org.springframework.data.ebean.sample.domain;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.lang.annotation.*;
 
 /**
- * @author Thomas Darimont
+ * Domain service use spring @Component
+ *
+ * @author Xuegui Yuan
  */
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Address {
-  private String country;
-  private String city;
-  private String streetName;
-  private String streetNo;
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface DomainService {
+    String value() default "";
 }

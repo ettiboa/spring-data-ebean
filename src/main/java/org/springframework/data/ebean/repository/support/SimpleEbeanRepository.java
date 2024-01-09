@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.ebean.repository.EbeanRepository;
 import org.springframework.data.ebean.util.Converters;
 import org.springframework.data.ebean.util.ExampleExpressionBuilder;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,10 +34,11 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Default implementation of the {@link org.springframework.data.repository.CrudRepository} interface. This will offer
- * you a more sophisticated interface than the plain {@link io.ebean.EbeanServer} .
+ * you a more sophisticated interface than the plain {@link io.ebean.Database} .
  *
  * @param <T>  the type of the entity to handle
  * @param <ID> the type of the entity's identifier
@@ -48,8 +50,9 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
 
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private static final String PROP_MUST_NOT_BE_NULL = "The given property must not be null!";
+    public static final String THE_GIVEN_ITERABLE_OF_ENTITIES_NOT_BE_NULL = "The given Iterable of entities not be null!";
 
-    private EbeanServer ebeanServer;
+    private Database ebeanServer;
 
     private Class<T> entityType;
 
@@ -60,7 +63,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
      * @param entityType  must not be {@literal null}.
      * @param ebeanServer must not be {@literal null}.
      */
-    public SimpleEbeanRepository(Class<T> entityType, EbeanServer ebeanServer) {
+    public SimpleEbeanRepository(Class<T> entityType, Database ebeanServer) {
         this.entityType = entityType;
         this.ebeanServer = ebeanServer;
     }
@@ -70,13 +73,13 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         PagedList<T> pagedList = db().find(getEntityType())
                 .setMaxRows(pageable.getPageSize())
                 .setFirstRow((int) pageable.getOffset())
-                .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()))
+                .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat())
                 .findPagedList();
         return Converters.convertToSpringDataPage(pagedList, pageable.getSort());
     }
 
     @Override
-    public EbeanServer db() {
+    public Database db() {
         return ebeanServer;
     }
 
@@ -85,7 +88,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
     }
 
     @Override
-    public EbeanServer db(EbeanServer db) {
+    public Database db(Database db) {
         this.ebeanServer = db;
         return this.ebeanServer;
     }
@@ -97,18 +100,16 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
 
     @Override
     public SqlUpdate sqlUpdateOf(String sql) {
-        return db().createSqlUpdate(sql);
+        return db().sqlUpdate(sql);
     }
 
-    @Override
     public <S extends T> S save(S s) {
         db().save(s);
         return s;
     }
 
-    @Override
     public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
-        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        Assert.notNull(entities, THE_GIVEN_ITERABLE_OF_ENTITIES_NOT_BE_NULL);
         db().saveAll((Collection<?>) entities);
         return entities;
     }
@@ -121,12 +122,11 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
 
     @Override
     public Iterable<T> updateAll(Iterable<T> entities) {
-        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        Assert.notNull(entities, THE_GIVEN_ITERABLE_OF_ENTITIES_NOT_BE_NULL);
         db().updateAll((Collection<?>) entities);
         return entities;
     }
 
-    @Override
     public void deleteById(ID id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         db().delete(getEntityType(), id);
@@ -138,9 +138,13 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         db().deletePermanent(getEntityType(), id);
     }
 
-    @Override
     public void delete(T t) {
         db().delete(t);
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends ID> ids) {
+        db().deleteAll(getEntityType(), (Collection<?>) ids);
     }
 
     @Override
@@ -148,19 +152,17 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         db().deletePermanent(t);
     }
 
-    @Override
     public void deleteAll(Iterable<? extends T> entities) {
-        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        Assert.notNull(entities, THE_GIVEN_ITERABLE_OF_ENTITIES_NOT_BE_NULL);
         db().deleteAll((Collection<?>) entities);
     }
 
     @Override
     public void deletePermanentAll(Iterable<? extends T> entities) {
-        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        Assert.notNull(entities, THE_GIVEN_ITERABLE_OF_ENTITIES_NOT_BE_NULL);
         db().deleteAllPermanent((Collection<?>) entities);
     }
 
-    @Override
     public void deleteAll() {
         query().delete();
     }
@@ -170,7 +172,6 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         query().setIncludeSoftDeletes().delete();
     }
 
-    @Override
     public Optional<T> findById(ID id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         return query().where().idEq(id).findOneOrEmpty();
@@ -245,7 +246,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
     @Override
     public List<T> findAll(Sort sort) {
         return query()
-                .setOrder(Converters.convertToEbeanOrderBy(sort))
+                .orderBy(Converters.convertToEbeanOrderBy(sort).toStringFormat())
                 .findList();
     }
 
@@ -275,7 +276,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         PagedList<T> pagedList = query(fetchPath)
                 .setMaxRows(pageable.getPageSize())
                 .setFirstRow((int) pageable.getOffset())
-                .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()))
+                .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat())
                 .findPagedList();
         return Converters.convertToSpringDataPage(pagedList, pageable.getSort());
     }
@@ -313,7 +314,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         PagedList<S> pagedList = queryByExample(example)
                 .setMaxRows(pageable.getPageSize())
                 .setFirstRow((int) pageable.getOffset())
-                .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()))
+                .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat())
                 .findPagedList();
         return Converters.convertToSpringDataPage(pagedList, pageable.getSort());
     }
@@ -323,7 +324,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         PagedList<S> pagedList = queryByExample(fetchPath, example)
                 .setMaxRows(pageable.getPageSize())
                 .setFirstRow((int) pageable.getOffset())
-                .setOrder(Converters.convertToEbeanOrderBy(pageable.getSort()))
+                .orderBy(Converters.convertToEbeanOrderBy(pageable.getSort()).toStringFormat())
                 .findPagedList();
         return Converters.convertToSpringDataPage(pagedList, pageable.getSort());
     }
@@ -339,12 +340,15 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
     }
 
     @Override
+    public <S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+        return null;
+    }
+
     public boolean existsById(ID id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         return query().where().idEq(id).findCount() > 0;
     }
 
-    @Override
     public long count() {
         return query().findCount();
     }
@@ -365,7 +369,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
         if (sort == null) {
             return query(fetchPath);
         } else {
-            return query(fetchPath).setOrder(Converters.convertToEbeanOrderBy(sort));
+            return query(fetchPath).orderBy(Converters.convertToEbeanOrderBy(sort).toStringFormat());
         }
     }
 
@@ -384,7 +388,7 @@ public class SimpleEbeanRepository<T, ID> implements EbeanRepository<T, ID> {
     private <S extends T> Query<S> queryByExample(String fetchPath, Example<S> example, Sort sort) {
         Query<S> query = queryByExample(fetchPath, example);
         if (sort != null) {
-            query.setOrder(Converters.convertToEbeanOrderBy(sort));
+            query.orderBy(Converters.convertToEbeanOrderBy(sort).toStringFormat());
         }
         return query;
     }

@@ -16,7 +16,7 @@
 
 package org.springframework.data.ebean.repository.query;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import org.springframework.data.ebean.annotation.Query;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.NamedQueries;
@@ -43,14 +43,14 @@ public final class EbeanQueryLookupStrategy {
     }
 
     /**
-     * Creates a {@link QueryLookupStrategy} for the given {@link EbeanServer} and {@link Key}.
+     * Creates a {@link QueryLookupStrategy} for the given {@link Database} and {@link Key}.
      *
      * @param ebeanServer               must not be {@literal null}.
      * @param key                       may be {@literal null}.
      * @param evaluationContextProvider must not be {@literal null}.
      * @return
      */
-    public static QueryLookupStrategy create(EbeanServer ebeanServer, Key key,
+    public static QueryLookupStrategy create(Database ebeanServer, Key key,
                                              QueryMethodEvaluationContextProvider evaluationContextProvider) {
 
         Assert.notNull(ebeanServer, "EbeanServer must not be null!");
@@ -76,13 +76,13 @@ public final class EbeanQueryLookupStrategy {
      */
     private static class CreateQueryLookupStrategy extends AbstractQueryLookupStrategy {
 
-        public CreateQueryLookupStrategy(EbeanServer ebeanServer) {
+        public CreateQueryLookupStrategy(Database ebeanServer) {
 
             super(ebeanServer);
         }
 
         @Override
-        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, EbeanServer ebeanServer, NamedQueries namedQueries) {
+        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries) {
 
             try {
                 return new PartTreeEbeanQuery(method, ebeanServer);
@@ -95,21 +95,21 @@ public final class EbeanQueryLookupStrategy {
     }
 
     /**
-     * Base class for {@link QueryLookupStrategy} implementations that need access to an {@link EbeanServer}.
+     * Base class for {@link QueryLookupStrategy} implementations that need access to an {@link Database}.
      *
      * @author Oliver Gierke
      * @author Thomas Darimont
      */
     private abstract static class AbstractQueryLookupStrategy implements QueryLookupStrategy {
 
-        private final EbeanServer ebeanServer;
+        private final Database ebeanServer;
 
         /**
          * Creates a new {@link AbstractQueryLookupStrategy}.
          *
          * @param ebeanServer
          */
-        public AbstractQueryLookupStrategy(EbeanServer ebeanServer) {
+        public AbstractQueryLookupStrategy(Database ebeanServer) {
             this.ebeanServer = ebeanServer;
         }
 
@@ -127,7 +127,7 @@ public final class EbeanQueryLookupStrategy {
          * @param namedQueries
          * @return RepositoryQuery
          */
-        protected abstract RepositoryQuery resolveQuery(EbeanQueryMethod method, EbeanServer ebeanServer, NamedQueries namedQueries);
+        protected abstract RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries);
     }
 
     /**
@@ -150,7 +150,7 @@ public final class EbeanQueryLookupStrategy {
          * @param createStrategy
          * @param lookupStrategy
          */
-        public CreateIfNotFoundQueryLookupStrategy(EbeanServer ebeanServer,
+        public CreateIfNotFoundQueryLookupStrategy(Database ebeanServer,
                                                    CreateQueryLookupStrategy createStrategy, DeclaredQueryLookupStrategy lookupStrategy) {
             super(ebeanServer);
 
@@ -163,7 +163,7 @@ public final class EbeanQueryLookupStrategy {
          * @see org.springframework.data.ebean.repository.query.ebeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.ebeanQueryMethod, javax.persistence.EntityManager, org.springframework.data.repository.core.NamedQueries)
          */
         @Override
-        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, EbeanServer ebeanServer, NamedQueries namedQueries) {
+        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries) {
             try {
                 return lookupStrategy.resolveQuery(method, ebeanServer, namedQueries);
             } catch (IllegalStateException e) {
@@ -189,7 +189,7 @@ public final class EbeanQueryLookupStrategy {
          * @param ebeanServer
          * @param evaluationContextProvider
          */
-        public DeclaredQueryLookupStrategy(EbeanServer ebeanServer,
+        public DeclaredQueryLookupStrategy(Database ebeanServer,
                                            QueryMethodEvaluationContextProvider evaluationContextProvider) {
             super(ebeanServer);
             this.evaluationContextProvider = evaluationContextProvider;
@@ -200,7 +200,7 @@ public final class EbeanQueryLookupStrategy {
          * @see org.springframework.data.ebean.repository.query.ebeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.ebeanQueryMethod, javax.persistence.EntityManager, org.springframework.data.repository.core.NamedQueries)
          */
         @Override
-        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, EbeanServer ebeanServer, NamedQueries namedQueries) {
+        protected RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries) {
             RepositoryQuery query = EbeanQueryFactory.INSTANCE.fromQueryAnnotation(method, ebeanServer, evaluationContextProvider);
 
             if (null != query) {
