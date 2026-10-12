@@ -1,15 +1,27 @@
 package org.springframework.data.ebean.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.hexagonframework.data.ebean.sample.config.SampleConfig;
 import io.github.hexagonframework.data.ebean.sample.domain.User;
 import io.github.hexagonframework.data.ebean.sample.domain.UserRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
@@ -104,15 +116,17 @@ class UserRepositoryIntegrationTest {
             assertThat(u.getAge()).isEqualTo(32);
         }
     }
-/*
+
     @Test
     public void deleteById() throws Exception {
-        user = new User("Xuegui", "Yuan", "yuanxuegui@163.com");
-        userRepository.deleteById(1L);
-        assertEquals(false, userRepository.findById(1L).isPresent());
+        user = userRepository.save(user);
+        Long id = user.getId();
+        userRepository.deleteById(id);
+        assertFalse(userRepository.findById(id).isPresent());
 
+        user = new User("Xuegui", "Yuan", "yuanxuegui@163.com");
         user.changeEmail("yuanxuegui@126.com");
-        userRepository.save(user);
+        user = userRepository.save(user);
         User u = userRepository.findByProperty("emailAddress", "yuanxuegui@126.com").get();
         assertNotNull(u);
 
@@ -121,10 +135,11 @@ class UserRepositoryIntegrationTest {
 
     @Test
     public void delete() throws Exception {
-        User u = new User();
-        u.setId(1L);
+        User u = new User("delete", "delete", "delete@163.com");
+        u = userRepository.save(u);
+        Long id = u.getId();
         userRepository.delete(u);
-        assertEquals(false, userRepository.findById(1L).isPresent());
+        assertFalse(userRepository.findById(id).isPresent());
     }
 
     @Test
@@ -137,12 +152,16 @@ class UserRepositoryIntegrationTest {
     public void deleteAll_entities() throws Exception {
         List<User> users = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
-            User u = new User();
-            u.setId(i + 1L);
-            users.add(u);
+            users.add(new User("deleteAll", "deleteAll" + i, "deleteAll" + i + "@163.com"));
+        }
+        userRepository.saveAll(users);
+
+        List<Long> ids = new ArrayList<>();
+        for (User u : users) {
+            ids.add(u.getId());
         }
         userRepository.deleteAll(users);
-        users = userRepository.findAllById(Arrays.asList(1L, 2L, 3L));
+        users = userRepository.findAllById(ids);
         assertEquals(0, users.size());
     }
 
@@ -394,13 +413,13 @@ class UserRepositoryIntegrationTest {
         result1.forEach(it -> System.out.println(it));
         assertEquals(1, result1.size());
         assertEquals("Yuan", result1.get(0).getFullName().getLastName());
-        assertThat(result1, hasItem(user));
+        assertThat(result1).contains(user);
 
         // test find list orm query
         List<User> result2 = userRepository.findByLastnameOql("Yuan");
         assertEquals(1, result2.size());
         assertEquals("Yuan", result2.get(0).getFullName().getLastName());
-        assertThat(result2, hasItem(user));
+        assertThat(result2).contains(user);
 
         // test find list sql query
         List<User> result3 = userRepository.findUsersByLastNameEquals("Yuan");
@@ -459,7 +478,7 @@ class UserRepositoryIntegrationTest {
         List<User> result1 = userRepository.findAllByEmailAddressAndFullNameLastName("yuanxuegui@163.com", "Yuan");
         assertEquals(1, result1.size());
         assertEquals("Yuan", result1.get(0).getFullName().getLastName());
-        assertThat(result1, hasItem(user));
+        assertThat(result1).contains(user);
     }
 
     @Test
@@ -482,5 +501,5 @@ class UserRepositoryIntegrationTest {
     public void findUserByEmailAddressEqualsOql_pageable() {
         Page<User> page = userRepository.findUserByEmailAddressEqualsOql("yuanxuegui@163.com", PageRequest.of(0, 20, Sort.Direction.DESC, "id"));
         assertNotNull(page);
-    }*/
+    }
 }

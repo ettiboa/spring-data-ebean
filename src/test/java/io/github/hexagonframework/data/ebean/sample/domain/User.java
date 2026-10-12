@@ -46,7 +46,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @NamedQuery(name = "withManagerById",
-    query = "select (fullName,address) fetch manager (lastName) where fullName.lastName = :lastName order by id desc")
+    query = "select (fullName,address) fetch manager (fullName) where fullName.lastName = :lastName order by id desc")
 @Getter
 @Setter
 public class User extends AbstractAggregateRoot {
