@@ -39,7 +39,7 @@ final class NativeEbeanQuery extends AbstractStringBasedEbeanQuery {
      * @param evaluationContextProvider
      */
     public NativeEbeanQuery(EbeanQueryMethod method, Database ebeanServer, String queryString,
-                            QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
+                            ValueExpressionDelegate evaluationContextProvider, SpelExpressionParser parser) {
 
         super(method, ebeanServer, queryString, evaluationContextProvider, parser);
 

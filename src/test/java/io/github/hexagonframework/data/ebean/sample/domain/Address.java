@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
-import org.springframework.context.ApplicationEvent;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Domain event.
- *
- * @author Xuegui Yuan
+ * @author Thomas Darimont
  */
-public class DomainEvent extends ApplicationEvent {
-
-    public DomainEvent(Object source) {
-        super(source);
-    }
-
+@Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Address {
+  private String country;
+  private String city;
+  private String streetName;
+  private String streetNo;
 }

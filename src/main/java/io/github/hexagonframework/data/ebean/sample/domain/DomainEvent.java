@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.springframework.context.ApplicationEvent;
 
 /**
- * Domain service use spring @Component
+ * Domain event.
  *
  * @author Xuegui Yuan
  */
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Component
-public @interface DomainService {
-    String value() default "";
+public class DomainEvent extends ApplicationEvent {
+
+    public DomainEvent(Object source) {
+        super(source);
+    }
+
 }

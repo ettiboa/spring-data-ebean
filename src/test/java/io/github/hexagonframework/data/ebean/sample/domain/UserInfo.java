@@ -1,7 +1,7 @@
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
 import io.ebean.annotation.Sql;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 

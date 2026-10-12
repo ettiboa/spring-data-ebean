@@ -2,23 +2,20 @@ package org.springframework.data.ebean.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.hexagonframework.data.ebean.sample.config.SampleConfig;
+import io.github.hexagonframework.data.ebean.sample.domain.User;
+import io.github.hexagonframework.data.ebean.sample.domain.UserRepository;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.ebean.sample.config.SampleConfig;
-import org.springframework.data.ebean.sample.domain.FullName;
-import org.springframework.data.ebean.sample.domain.User;
-import org.springframework.data.ebean.sample.domain.UserRepository;
-import org.springframework.data.ebean.sample.domain.query.QAddress;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * @author Xuegui Yuan
  */
-@SpringJUnitConfig(classes = {SampleConfig.class, QAddress.class, FullName.class})
+@SpringJUnitConfig(classes = SampleConfig.class)
 class UserRepositoryIntegrationTest {
 
     @Autowired
@@ -88,13 +85,20 @@ class UserRepositoryIntegrationTest {
     void updateAll() throws Exception {
         List<User> users = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
-            User u = new User();
-            u.setId(i + 1L);
+            users.add(new User("updateAll", "updateAll" + i, "updateAll" + i + "@163.com"));
+        }
+        userRepository.saveAll(users);
+
+        for (User u : users) {
             u.setAge(32);
-            users.add(u);
         }
         userRepository.updateAll(users);
-        users = userRepository.findAllById(Arrays.asList(1L, 2L, 3L));
+
+        List<Long> ids = new ArrayList<>();
+        for (User u : users) {
+            ids.add(u.getId());
+        }
+        users = userRepository.findAllById(ids);
         for (User u : users) {
             assertThat(u).isNotNull();
             assertThat(u.getAge()).isEqualTo(32);

@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +45,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user")
+@NamedQuery(name = "withManagerById",
+    query = "select (fullName,address) fetch manager (lastName) where fullName.lastName = :lastName order by id desc")
 @Getter
 @Setter
 public class User extends AbstractAggregateRoot {
@@ -46,10 +60,16 @@ public class User extends AbstractAggregateRoot {
     private String emailAddress;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<User> colleagues;
+    @JoinTable(name = "user_colleague",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "colleague_id"))
+    private Set<User> colleagues = new HashSet<>();
 
     @ManyToMany
-    private Set<Role> roles;
+    @JoinTable(name = "user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @ManyToOne
     private User manager;
@@ -82,8 +102,7 @@ public class User extends AbstractAggregateRoot {
         this.fullName = new FullName(firstName, lastName);
         this.emailAddress = emailAddress;
         this.active = true;
-        this.roles = new HashSet<Role>(Arrays.asList(roles));
-        this.colleagues = new HashSet<User>();
+        this.roles.addAll(Arrays.asList(roles));
     }
 
     public void changeEmail(String emailAddress) {

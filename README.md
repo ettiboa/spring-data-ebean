@@ -175,7 +175,7 @@ public interface UserRepository extends EbeanRepository<User, Long> {
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ebean xmlns="http://ebean-orm.github.io/xml/ns/ebean">
-    <entity class="org.springframework.data.ebean.sample.domain.User">
+    <entity class="io.github.hexagonframework.data.ebean.sample.domain.User">
         <named-query name="withManagerById">
             <query>
                 select (firstname,lastname,address)
@@ -191,7 +191,7 @@ public interface UserRepository extends EbeanRepository<User, Long> {
             </query>
         </raw-sql>
     </entity>
-    <entity class="org.springframework.data.ebean.sample.domain.UserInfo">
+    <entity class="io.github.hexagonframework.data.ebean.sample.domain.UserInfo">
         <raw-sql name="userInfo">
             <query>
                 select first_name, last_name, email_address from user
@@ -370,10 +370,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.ebean.sample.config.SampleConfig;
-import org.springframework.data.ebean.sample.domain.User;
-import org.springframework.data.ebean.sample.domain.UserInfo;
-import org.springframework.data.ebean.sample.domain.UserRepository;
+import io.github.hexagonframework.data.ebean.sample.config.SampleConfig;
+import io.github.hexagonframework.data.ebean.sample.domain.User;
+import io.github.hexagonframework.data.ebean.sample.domain.UserInfo;
+import io.github.hexagonframework.data.ebean.sample.domain.UserRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

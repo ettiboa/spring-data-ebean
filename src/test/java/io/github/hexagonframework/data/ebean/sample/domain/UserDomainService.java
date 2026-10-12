@@ -1,4 +1,4 @@
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.event.TransactionalEventListener;

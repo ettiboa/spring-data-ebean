@@ -17,7 +17,9 @@
 package org.springframework.data.ebean.repository.query;
 
 import io.ebean.Database;
+import org.springframework.data.expression.ValueEvaluationContextProvider;
 import org.springframework.data.repository.query.*;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.Assert;
 
@@ -30,7 +32,7 @@ import org.springframework.util.Assert;
 abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
 
     private final StringQuery query;
-    private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+    private final ValueEvaluationContextProvider evaluationContextProvider;
     private final SpelExpressionParser parser;
 
     /**
@@ -44,7 +46,7 @@ abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
      * @param parser                    must not be {@literal null}.
      */
     public AbstractStringBasedEbeanQuery(EbeanQueryMethod method, Database ebeanServer, String queryString,
-                                         QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
+                                         ValueExpressionDelegate evaluationContextProvider, SpelExpressionParser parser) {
 
         super(method, ebeanServer);
 
@@ -52,7 +54,7 @@ abstract class AbstractStringBasedEbeanQuery extends AbstractEbeanQuery {
         Assert.notNull(evaluationContextProvider, "ExpressionEvaluationContextProvider must not be null!");
         Assert.notNull(parser, "Parser must not be null or empty!");
 
-        this.evaluationContextProvider = evaluationContextProvider;
+        this.evaluationContextProvider = evaluationContextProvider.createValueContextProvider(method.getParameters());
         this.query = new ExpressionBasedStringQuery(queryString, method.getEntityInformation(), parser);
         this.parser = parser;
     }

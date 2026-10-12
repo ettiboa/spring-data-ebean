@@ -16,14 +16,14 @@
 
 package org.springframework.data.ebean.repository.config;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.ebean.repository.EbeanRepository;
 import org.springframework.data.ebean.repository.support.EbeanRepositoryFactoryBean;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;

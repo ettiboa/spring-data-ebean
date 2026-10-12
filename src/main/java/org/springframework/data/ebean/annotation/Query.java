@@ -42,7 +42,7 @@ public @interface Query {
     boolean nativeQuery() default false;
 
     /**
-     * The named query to be used. If not defined, a {@link javax.persistence.NamedQuery} with name of
+     * The named query to be used. If not defined, a {@link jakarta.persistence.NamedQuery} with name of
      * {@code $ domainClass}.${queryMethodName}} will be used.
      */
     String name() default "";

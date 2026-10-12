@@ -21,7 +21,7 @@ import io.ebean.Expression;
 import io.ebean.ExpressionList;
 import io.ebean.Query;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mapping.PropertyPath;
+import org.springframework.data.core.PropertyPath;
 import org.springframework.data.repository.query.ReturnedType;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;

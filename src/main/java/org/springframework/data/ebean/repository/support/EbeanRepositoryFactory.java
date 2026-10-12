@@ -25,7 +25,7 @@ import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.query.QueryLookupStrategy;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -103,7 +103,7 @@ public class EbeanRepositoryFactory extends RepositoryFactorySupport {
      */
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
-                                                                   QueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                                                   ValueExpressionDelegate evaluationContextProvider) {
         return Optional.ofNullable(EbeanQueryLookupStrategy.create(ebeanServer, key, evaluationContextProvider));
     }
 

@@ -16,13 +16,13 @@
 
 package org.springframework.data.ebean.repository.query;
 
+import org.springframework.data.expression.ValueEvaluationContextProvider;
 import org.springframework.data.repository.query.DefaultParameters;
 import org.springframework.data.repository.query.Parameter;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
 class SpelExpressionStringQueryParameterBinder extends StringQueryParameterBinder {
 
     private final StringQuery query;
-    private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+    private final ValueEvaluationContextProvider evaluationContextProvider;
     private final SpelExpressionParser parser;
 
     /**
@@ -48,7 +48,7 @@ class SpelExpressionStringQueryParameterBinder extends StringQueryParameterBinde
      * @param parser                    must not be {@literal null}
      */
     public SpelExpressionStringQueryParameterBinder(DefaultParameters parameters, Object[] values, StringQuery query,
-                                                    QueryMethodEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
+                                                    ValueEvaluationContextProvider evaluationContextProvider, SpelExpressionParser parser) {
 
         super(parameters, values, query);
         Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
@@ -115,12 +115,14 @@ class SpelExpressionStringQueryParameterBinder extends StringQueryParameterBinde
     }
 
     /**
-     * Returns the {@link StandardEvaluationContext} to use for evaluation.
+     * Returns the {@link EvaluationContext} to use for evaluation.
      *
      * @return
      */
     private EvaluationContext getEvaluationContext() {
-        return evaluationContextProvider.getEvaluationContext(getParameters(), getValues());
+        return evaluationContextProvider
+            .getEvaluationContext(new ParametersParameterAccessor(getParameters(), getValues()))
+            .getEvaluationContext();
     }
 
     @Override

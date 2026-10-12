@@ -19,18 +19,16 @@ package org.springframework.data.ebean.repository;
 import io.ebean.Database;
 import io.ebean.SqlUpdate;
 import io.ebean.UpdateQuery;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Ebean specific extension of {@link org.springframework.data.repository.Repository}.

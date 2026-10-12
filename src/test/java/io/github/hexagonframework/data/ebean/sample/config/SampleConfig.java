@@ -1,4 +1,4 @@
-package org.springframework.data.ebean.sample.config;
+package io.github.hexagonframework.data.ebean.sample.config;
 
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
@@ -11,14 +11,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.ebean.querychannel.EbeanQueryChannelService;
 import org.springframework.data.ebean.querychannel.QueryChannelService;
 import org.springframework.data.ebean.repository.config.EnableEbeanRepositories;
-import org.springframework.data.ebean.sample.domain.Address;
-import org.springframework.data.ebean.sample.domain.FullName;
-import org.springframework.data.ebean.sample.domain.Role;
-import org.springframework.data.ebean.sample.domain.User;
-import org.springframework.data.ebean.sample.domain.UserDomainService;
+import io.github.hexagonframework.data.ebean.sample.domain.UserDomainService;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -28,7 +23,7 @@ import javax.sql.DataSource;
  * @author Xuegui Yuan
  */
 @Configuration
-@EnableEbeanRepositories(value = "org.springframework.data.ebean.sample")
+@EnableEbeanRepositories(value = "io.github.hexagonframework.data.ebean.sample")
 @EnableTransactionManagement
 public class SampleConfig {
     @Bean
@@ -37,14 +32,14 @@ public class SampleConfig {
     }
 
     @Bean
-    public QueryChannelService ebeanQueryChannelService(Database ebeanServer) {
-        return new EbeanQueryChannelService(ebeanServer);
+    public QueryChannelService ebeanQueryChannelService(Database database) {
+        return new EbeanQueryChannelService(database);
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Bean
     @Primary
-    public DatabaseConfig defaultEbeanServerConfig() {
+    public DatabaseConfig defaultDatabaseConfig() {
         DatabaseConfig config = new DatabaseConfig();
 
         config.setDataSource(dataSource());
@@ -55,10 +50,7 @@ public class SampleConfig {
         config.setRegister(true);
         //config.setAutoCommitMode(false);
         config.setExpressionNativeIlike(true);
-        config.addClass(Address.class);
-        config.addClass(FullName.class);
-        config.addClass(Role.class);
-        config.addClass(User.class);
+        config.addPackage("io.github.hexagonframework.data.ebean.sample.domain");
 
         config.setCurrentUserProvider(new CurrentUserProvider() {
             @Override
@@ -72,12 +64,22 @@ public class SampleConfig {
 
     @Bean
     public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        return dataSource;
+    }
+
+    @Bean
+    public DatabaseFactory ebeanServerFactoryBean() {
+        return new DatabaseFactory();
     }
 
     @Bean
     @Primary
-    public Database defaultEbeanServer(DatabaseConfig defaultEbeanServerConfig) {
+    public Database defaultDatabase(DatabaseConfig defaultEbeanServerConfig) {
         return DatabaseFactory.create(defaultEbeanServerConfig);
     }
 

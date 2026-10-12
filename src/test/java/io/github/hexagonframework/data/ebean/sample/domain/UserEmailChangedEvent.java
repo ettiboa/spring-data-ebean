@@ -1,4 +1,4 @@
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
 /**
  * @author Xuegui Yuan

@@ -1,8 +1,7 @@
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
 import java.io.Serializable;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * @author Xuegui Yuan
  */
-@Entity
+@Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

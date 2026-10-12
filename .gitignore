@@ -4,6 +4,9 @@ target/
 *.iml
 .project
 .classpath
+.factorypath
 .springBeans
 .sonar4clipse
 *.sonar4clipseExternals
+log/
+.omo/

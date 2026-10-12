@@ -18,12 +18,10 @@ package org.springframework.data.ebean.querychannel;
 
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.ebean.annotation.ExprParam;
 import org.springframework.data.ebean.annotation.IncludeFields;
 import org.springframework.data.ebean.util.Converters;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -36,22 +34,21 @@ import java.util.Map;
  *
  * @author Xuegui Yuan
  */
-@Service
 public class EbeanQueryChannelService implements QueryChannelService {
 
     public static final String ENTITY_TYPE_MUST_NOT_NULL = "entityType must not null";
-    private final Database ebeanServer;
+    private final Database database;
 
     public EbeanQueryChannelService() {
-        this.ebeanServer = DB.getDefault();
+        this.database = DB.getDefault();
     }
 
     public EbeanQueryChannelService(String serverName) {
-        this.ebeanServer = DB.byName(serverName);
+        this.database = DB.byName(serverName);
     }
 
-    public EbeanQueryChannelService(Database ebeanServer) {
-        this.ebeanServer = ebeanServer;
+    public EbeanQueryChannelService(Database database) {
+        this.database = database;
     }
 
     /**
@@ -417,7 +414,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
     @Override
     public <T> Query<T> createQuery(Class<T> entityType) {
         Assert.notNull(entityType, "entityType must not null");
-        return ebeanServer.find(entityType);
+        return database.find(entityType);
     }
 
     /**
@@ -430,7 +427,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
     public <T> Query<T> createQuery(Class<T> entityType, String eql) {
         Assert.notNull(entityType, "entityType must not null");
         Assert.hasText(eql, "eql must has text");
-        return ebeanServer.createQuery(entityType, eql);
+        return database.createQuery(entityType, eql);
     }
 
     /**
@@ -442,7 +439,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
     @Override
     public SqlQuery createSqlQuery(String sql) {
         Assert.hasText(sql, "sql must has text");
-        return ebeanServer.sqlQuery(sql);
+        return database.sqlQuery(sql);
     }
 
     /**
@@ -456,7 +453,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
         Assert.notNull(entityType, "entityType must not null");
         Assert.hasText(sql, "sql must has text");
         RawSqlBuilder rawSqlBuilder = RawSqlBuilder.parse(sql);
-        return ebeanServer.find(entityType).setRawSql(rawSqlBuilder.create());
+        return database.find(entityType).setRawSql(rawSqlBuilder.create());
     }
 
     /**
@@ -477,7 +474,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
         columnMapping.entrySet().forEach(entry -> {
             rawSqlBuilder.columnMapping(entry.getKey(), entry.getValue());
         });
-        return ebeanServer.find(entityType).setRawSql(rawSqlBuilder.create());
+        return database.find(entityType).setRawSql(rawSqlBuilder.create());
     }
 
     /**
@@ -498,7 +495,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
         tableAliasMapping.entrySet().forEach(entry -> {
             rawSqlBuilder.tableAliasMapping(entry.getKey(), entry.getValue());
         });
-        return ebeanServer.find(entityType).setRawSql(rawSqlBuilder.create());
+        return database.find(entityType).setRawSql(rawSqlBuilder.create());
     }
 
     /**
@@ -509,7 +506,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
      */
     @Override
     public <T> Query<T> createNamedQuery(Class<T> entityType, String queryName) {
-        return ebeanServer.createNamedQuery(entityType, queryName);
+        return database.createNamedQuery(entityType, queryName);
     }
 
     /**
@@ -521,7 +518,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
      */
     @Override
     public <T> DtoQuery<T> createDtoQuery(Class<T> dtoType, String sql) {
-        return ebeanServer.findDto(dtoType, sql).setRelaxedMode();
+        return database.findDto(dtoType, sql).setRelaxedMode();
     }
 
     /**
@@ -533,7 +530,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
      */
     @Override
     public <T> DtoQuery<T> createNamedDtoQuery(Class<T> dtoType, String namedQuery) {
-        return ebeanServer.createNamedDtoQuery(dtoType, namedQuery).setRelaxedMode();
+        return database.createNamedDtoQuery(dtoType, namedQuery).setRelaxedMode();
     }
 
     /**
@@ -543,7 +540,7 @@ public class EbeanQueryChannelService implements QueryChannelService {
      */
     @Override
     public ExampleExpression exampleOf(Object example) {
-        return ebeanServer.expressionFactory().exampleLike(example);
+        return database.expressionFactory().exampleLike(example);
     }
 
     /**
@@ -555,6 +552,6 @@ public class EbeanQueryChannelService implements QueryChannelService {
     public ExampleExpression exampleOf(Object example,
                                        boolean caseInsensitive,
                                        LikeType likeType) {
-        return ebeanServer.expressionFactory().exampleLike(example, caseInsensitive, likeType);
+        return database.expressionFactory().exampleLike(example, caseInsensitive, likeType);
     }
 }

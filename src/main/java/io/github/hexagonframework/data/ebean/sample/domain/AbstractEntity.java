@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.data.ebean.sample.domain;
+package io.github.hexagonframework.data.ebean.sample.domain;
 
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import io.ebean.annotation.WhoCreated;
 import io.ebean.annotation.WhoModified;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

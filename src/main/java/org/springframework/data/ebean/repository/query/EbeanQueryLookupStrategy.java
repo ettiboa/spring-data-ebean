@@ -23,7 +23,7 @@ import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryLookupStrategy.Key;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.util.Assert;
 
@@ -51,7 +51,7 @@ public final class EbeanQueryLookupStrategy {
      * @return
      */
     public static QueryLookupStrategy create(Database ebeanServer, Key key,
-                                             QueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                             ValueExpressionDelegate evaluationContextProvider) {
 
         Assert.notNull(ebeanServer, "EbeanServer must not be null!");
         Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
@@ -160,7 +160,7 @@ public final class EbeanQueryLookupStrategy {
 
         /*
          * (non-Javadoc)
-         * @see org.springframework.data.ebean.repository.query.ebeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.ebeanQueryMethod, javax.persistence.EntityManager, org.springframework.data.repository.core.NamedQueries)
+         * @see org.springframework.data.ebean.repository.query.EbeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.EbeanQueryMethod, io.ebean.Database, org.springframework.data.repository.core.NamedQueries)
          */
         @Override
         protected RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries) {
@@ -181,7 +181,7 @@ public final class EbeanQueryLookupStrategy {
      */
     private static class DeclaredQueryLookupStrategy extends AbstractQueryLookupStrategy {
 
-        private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+        private final ValueExpressionDelegate evaluationContextProvider;
 
         /**
          * Creates a new {@link DeclaredQueryLookupStrategy}.
@@ -190,14 +190,14 @@ public final class EbeanQueryLookupStrategy {
          * @param evaluationContextProvider
          */
         public DeclaredQueryLookupStrategy(Database ebeanServer,
-                                           QueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                           ValueExpressionDelegate evaluationContextProvider) {
             super(ebeanServer);
             this.evaluationContextProvider = evaluationContextProvider;
         }
 
         /*
          * (non-Javadoc)
-         * @see org.springframework.data.ebean.repository.query.ebeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.ebeanQueryMethod, javax.persistence.EntityManager, org.springframework.data.repository.core.NamedQueries)
+         * @see org.springframework.data.ebean.repository.query.EbeanQueryLookupStrategy.AbstractQueryLookupStrategy#resolveQuery(org.springframework.data.ebean.repository.query.EbeanQueryMethod, io.ebean.Database, org.springframework.data.repository.core.NamedQueries)
          */
         @Override
         protected RepositoryQuery resolveQuery(EbeanQueryMethod method, Database ebeanServer, NamedQueries namedQueries) {
