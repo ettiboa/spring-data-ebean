@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.hexagonframework.data.ebean.sample.config.SampleConfig;
-import io.github.hexagonframework.data.ebean.sample.domain.User;
-import io.github.hexagonframework.data.ebean.sample.domain.UserRepository;
+import io.github.ettiboa.ebean.sample.config.SampleConfig;
+import io.github.ettiboa.ebean.sample.domain.User;
+import io.github.ettiboa.ebean.sample.domain.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

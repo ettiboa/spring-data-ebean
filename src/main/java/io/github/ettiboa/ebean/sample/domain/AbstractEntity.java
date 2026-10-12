@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.hexagonframework.data.ebean.sample.domain;
+package io.github.ettiboa.ebean.sample.domain;
 
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;

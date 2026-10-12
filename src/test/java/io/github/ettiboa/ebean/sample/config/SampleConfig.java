@@ -1,4 +1,4 @@
-package io.github.hexagonframework.data.ebean.sample.config;
+package io.github.ettiboa.ebean.sample.config;
 
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.ebean.querychannel.EbeanQueryChannelService;
 import org.springframework.data.ebean.querychannel.QueryChannelService;
 import org.springframework.data.ebean.repository.config.EnableEbeanRepositories;
-import io.github.hexagonframework.data.ebean.sample.domain.UserDomainService;
+import io.github.ettiboa.ebean.sample.domain.UserDomainService;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -23,7 +23,7 @@ import javax.sql.DataSource;
  * @author Xuegui Yuan
  */
 @Configuration
-@EnableEbeanRepositories(value = "io.github.hexagonframework.data.ebean.sample")
+@EnableEbeanRepositories(value = "io.github.ettiboa.ebean.sample")
 @EnableTransactionManagement
 public class SampleConfig {
     @Bean
@@ -50,7 +50,7 @@ public class SampleConfig {
         config.setRegister(true);
         //config.setAutoCommitMode(false);
         config.setExpressionNativeIlike(true);
-        config.addPackage("io.github.hexagonframework.data.ebean.sample.domain");
+        config.addPackage("io.github.ettiboa.ebean.sample.domain");
 
         config.setCurrentUserProvider(new CurrentUserProvider() {
             @Override

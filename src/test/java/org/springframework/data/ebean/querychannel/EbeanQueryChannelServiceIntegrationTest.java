@@ -8,10 +8,10 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import io.github.hexagonframework.data.ebean.sample.config.SampleConfig;
-import io.github.hexagonframework.data.ebean.sample.domain.User;
-import io.github.hexagonframework.data.ebean.sample.domain.UserInfo;
-import io.github.hexagonframework.data.ebean.sample.domain.UserRepository;
+import io.github.ettiboa.ebean.sample.config.SampleConfig;
+import io.github.ettiboa.ebean.sample.domain.User;
+import io.github.ettiboa.ebean.sample.domain.UserInfo;
+import io.github.ettiboa.ebean.sample.domain.UserRepository;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**

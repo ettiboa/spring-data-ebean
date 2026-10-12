@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.hexagonframework.data.ebean.sample.domain;
+package io.github.ettiboa.ebean.sample.domain;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

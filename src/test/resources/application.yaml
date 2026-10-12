@@ -2,7 +2,7 @@
 # Load (Dev/Test/Prod) properties external to your war/jar
 # -------------------------------------------------------------
 ebean:
-    packages: io.github.hexagonframework.data.ebean.sample.domain
+    packages: io.github.ettiboa.ebean.sample.domain
     ddl:
         generate: true
         run: true

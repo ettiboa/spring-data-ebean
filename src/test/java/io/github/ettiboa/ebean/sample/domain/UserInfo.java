@@ -1,4 +1,4 @@
-package io.github.hexagonframework.data.ebean.sample.domain;
+package io.github.ettiboa.ebean.sample.domain;
 
 import io.ebean.annotation.Sql;
 import jakarta.persistence.Entity;

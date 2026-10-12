@@ -1,1 +1,1 @@
-entity-packages: io.github.hexagonframework.data.ebean.sample.domain
+entity-packages: io.github.ettiboa.ebean.sample.domain
